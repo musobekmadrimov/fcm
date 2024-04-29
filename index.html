@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker
+                .register('/firebase-messaging-sw.js')
+                .then(registration => {
+                    console.log('Service Worker registered with scope:', registration.scope);
+                })
+                .catch(error => {
+                    console.error('Service Worker registration failed:', error);
+                });
+        });
+    }
+</script>
+
+<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-messaging.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyBBed8r91sLX41rtN_eV0_oboi6NyrDSAA",
+        authDomain: "portfolio-website-javohir.firebaseapp.com",
+        projectId: "portfolio-website-javohir",
+        storageBucket: "portfolio-website-javohir.appspot.com",
+        messagingSenderId: "762678608362",
+        appId: "1:762678608362:web:348b7f4d324af6130b3293",
+        measurementId: "G-DZK0FFKFBT"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    const main_layout_messaging = firebase.messaging();
+    main_layout_messaging
+        .requestPermission()
+        .then(function () {
+            return main_layout_messaging.getToken()
+        })
+        .then(function (token) {
+            $.ajax({
+                url: '/firebaseToken',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    fcm_token: token
+                },
+                dataType: 'JSON',
+                success: function (response) {
+                    console.log(response);
+                },
+                error: function (error) {
+                    console.log(error);
+                },
+            });
+        })
+        .catch(function (err) {
+            console.log("Unable to get permission to notify.", err);
+        });
+
+    main_layout_messaging.onMessage(function (payload) {
+        const noteTitle = payload.notification.title;
+        const noteOptions = {
+            body: payload.notification.body,
+            icon: payload.notification.icon
+        };
+        new Notification(noteTitle, noteOptions);
+    });
+</script>
+</body>
+</html>
