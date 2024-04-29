@@ -10,14 +10,13 @@ Initialize the Firebase app in the service worker by passing in the messagingSen
 * New configuration for app@pulseservice.com
 */
 const firebaseConfig = {
-    apiKey: "AIzaSyCLR0WhueDyk_noOSkixcgOfrqeQOrjgiU",
-    authDomain: "tezpay-ru.firebaseapp.com",
-    databaseURL: "https://tezpay-ru-default-rtdb.firebaseio.com",
-    projectId: "tezpay-ru",
-    storageBucket: "tezpay-ru.appspot.com",
-    messagingSenderId: "672215398717",
-    appId: "1:672215398717:web:9e7f8a6990b30004786d54",
-    measurementId: "G-3H3Y6WTVMQ"
+    apiKey: "AIzaSyBBed8r91sLX41rtN_eV0_oboi6NyrDSAA",
+    authDomain: "portfolio-website-javohir.firebaseapp.com",
+    projectId: "portfolio-website-javohir",
+    storageBucket: "portfolio-website-javohir.appspot.com",
+    messagingSenderId: "762678608362",
+    appId: "1:762678608362:web:348b7f4d324af6130b3293",
+    measurementId: "G-DZK0FFKFBT"
 };
 
 firebase.initializeApp(firebaseConfig);
