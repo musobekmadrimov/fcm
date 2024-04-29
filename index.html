@@ -37,7 +37,6 @@
     };
 
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
     const main_layout_messaging = firebase.messaging();
     main_layout_messaging
         .requestPermission()
