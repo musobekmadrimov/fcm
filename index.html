@@ -5,7 +5,7 @@
     <title>Title</title>
 </head>
 <body>
-
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
 
     if ('serviceWorker' in navigator) {
@@ -22,43 +22,95 @@
     }
 </script>
 
-<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-messaging.js"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-<script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyBBed8r91sLX41rtN_eV0_oboi6NyrDSAA",
-        authDomain: "portfolio-website-javohir.firebaseapp.com",
-        projectId: "portfolio-website-javohir",
-        storageBucket: "portfolio-website-javohir.appspot.com",
-        messagingSenderId: "762678608362",
-        appId: "1:762678608362:web:348b7f4d324af6130b3293",
-        measurementId: "G-DZK0FFKFBT"
-    };
 
-    firebase.initializeApp(firebaseConfig);
-    const main_layout_messaging = firebase.messaging();
-    main_layout_messaging
-        .requestPermission()
-        .then(function () {
-            return main_layout_messaging.getToken()
-        })
-        .then(function (token) {
-            console.log(token);
-            localStorage.setItem('fcm_token', token);
-        })
-        .catch(function (err) {
-            console.log("Unable to get permission to notify.", err);
-        });
+<script type="module">
+    import {initializeApp} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+    import {
+        getMessaging,
+        onMessage,
+        getToken,
+        isSupported,
+    } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-messaging.js";
+    Notification.requestPermission().then((permission) => {
+        if (permission === 'granted') {
+            console.log('Notification permission granted.');
 
-    main_layout_messaging.onMessage(function (payload) {
-        const noteTitle = payload.notification.title;
-        const noteOptions = {
-            body: payload.notification.body,
-            icon: payload.notification.icon
-        };
-        new Notification(noteTitle, noteOptions);
+            const messaging = getMessaging();
+            getToken(messaging, { vapidKey: 'BKsNsDWtDuRlJ2qxPpkFVtCVrrtr8VKqSiSe2tr-uZCCzqc4zBDxjql3pg8MsXroTyOOWSjh4FSXpenB8cBTc04' }).then((currentToken) => {
+                if (currentToken) {
+                    console.log(currentToken);
+                } else {
+                    // Show permission request UI
+                    console.log('No registration token available. Request permission to generate one.');
+                    // ...
+                }
+            }).catch((err) => {
+                console.log('An error occurred while retrieving token. ', err);
+                // ...
+            });
+
+
+            onMessage(messaging, (payload) => {
+                console.log('Message received. ', payload);
+                // ...
+            });
+
+            onBackgroundMessage(messaging, (payload) => {
+                console.log('[firebase-messaging-sw.js] Received background message ', payload);
+                // Customize notification here
+                const notificationTitle = 'Background Message Title';
+                const notificationOptions = {
+                    body: 'Background Message body.',
+                    icon: '/firebase-logo.png'
+                };
+
+                self.registration.showNotification(notificationTitle,
+                    notificationOptions);
+            });
+        } else {
+            console.log('Unable to get permission to notify.');
+        }
     });
+
+
 </script>
+<!--<script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>-->
+<!--<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-app.js"></script>-->
+<!--<script src="https://www.gstatic.com/firebasejs/7.15.1/firebase-messaging.js"></script>-->
+<!--<script>-->
+<!--    const firebaseConfig = {-->
+<!--        apiKey: "AIzaSyBBed8r91sLX41rtN_eV0_oboi6NyrDSAA",-->
+<!--        authDomain: "portfolio-website-javohir.firebaseapp.com",-->
+<!--        projectId: "portfolio-website-javohir",-->
+<!--        storageBucket: "portfolio-website-javohir.appspot.com",-->
+<!--        messagingSenderId: "762678608362",-->
+<!--        appId: "1:762678608362:web:348b7f4d324af6130b3293",-->
+<!--        measurementId: "G-DZK0FFKFBT"-->
+<!--    };-->
+
+<!--    firebase.initializeApp(firebaseConfig);-->
+<!--    const main_layout_messaging = firebase.messaging();-->
+<!--    main_layout_messaging-->
+<!--        .requestPermission()-->
+<!--        .then(function () {-->
+<!--            return main_layout_messaging.getToken()-->
+<!--        })-->
+<!--        .then(function (token) {-->
+<!--            console.log(token);-->
+<!--            localStorage.setItem('fcm_token', token);-->
+<!--        })-->
+<!--        .catch(function (err) {-->
+<!--            console.log("Unable to get permission to notify.", err);-->
+<!--        });-->
+
+<!--    main_layout_messaging.onMessage(function (payload) {-->
+<!--        const noteTitle = payload.notification.title;-->
+<!--        const noteOptions = {-->
+<!--            body: payload.notification.body,-->
+<!--            icon: payload.notification.icon-->
+<!--        };-->
+<!--        new Notification(noteTitle, noteOptions);-->
+<!--    });-->
+<!--</script>-->
 </body>
 </html>
