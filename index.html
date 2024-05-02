@@ -49,7 +49,21 @@
             const messaging = getMessaging();
             getToken(messaging, { vapidKey: 'BKsNsDWtDuRlJ2qxPpkFVtCVrrtr8VKqSiSe2tr-uZCCzqc4zBDxjql3pg8MsXroTyOOWSjh4FSXpenB8cBTc04' }).then((currentToken) => {
                 if (currentToken) {
-                    console.log(currentToken);
+                    console.log('Current FCM token:', currentToken);
+
+
+
+
+                    // Delete old token if it exists and is valid
+                    const oldToken = localStorage.getItem('FCMToken');
+
+                    if (oldToken && oldToken !== currentToken) {
+                        // Delete old token if it exists and is different from the current token
+                        deleteOldTokenIfValid(oldToken);
+                    }
+
+                    localStorage.setItem('FCMToken', currentToken.toString());
+
                 } else {
                     // Show permission request UI
                     console.log('No registration token available. Request permission to generate one.');
@@ -69,7 +83,16 @@
             console.log('Unable to get permission to notify.');
         }
     });
-
+    // Function to delete the old FCM token if it exists and is valid
+    function deleteOldTokenIfValid(token) {
+        // Make a request to Firebase to delete the token
+        // Use the deleteToken method provided by the Firebase Messaging SDK
+        messaging.deleteToken(token).then(() => {
+            console.log('Old FCM token deleted successfully.');
+        }).catch((err) => {
+            console.log('Error deleting old FCM token:', err);
+        });
+    }
 
 </script>
 <!--<script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>-->
