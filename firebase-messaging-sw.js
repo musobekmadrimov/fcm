@@ -1,4 +1,4 @@
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js";
 import { getMessaging, onBackgroundMessage } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-messaging.js";
 
 
@@ -17,15 +17,32 @@ const messaging = getMessaging(firebaseApp);
 
 onBackgroundMessage(messaging, (payload) => {
     console.log('[firebase-messaging-sw.js] Received background message ', payload);
-    // Customize notification here
-    const notificationTitle = 'Background Message Title';
+    const notificationTitle = payload.data.title;
     const notificationOptions = {
-        body: 'Background Message body.',
-        icon: '/firebase-logo.png'
-    };
+        body: payload.data.body,
+        icon: payload.data.icon,
+        image: payload.data.image,
+        click_action: payload.data.click_action, // To handle notification click when notification is moved to notification tray
+        data: {
+            click_action: payload.data.click_action
+        }
+    }
+
+        self.addEventListener('notificationclick', function(event) {
+        console.log(event.notification.data.click_action);
+        if (!event.action) {
+            // Was a normal notification click
+            console.log('Notification Click.');
+            self.clients.openWindow(event.notification.data.click_action).then(r => console.log(r));
+            event.notification.close();
+
+        }else{
+            event.notification.close();
+        }
+    });
 
     self.registration.showNotification(notificationTitle,
-        notificationOptions);
+        notificationOptions).then(r => console.log('[firebase-messaging-sw.js] Received notification message ', r));
 });
 
 
