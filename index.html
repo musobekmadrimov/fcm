@@ -79,20 +79,22 @@
                 console.log('Message received. ', payload);
                 // ...
             });
+
+            // Function to delete the old FCM token if it exists and is valid
+            function deleteOldTokenIfValid(token) {
+                // Make a request to Firebase to delete the token
+                // Use the deleteToken method provided by the Firebase Messaging SDK
+                messaging.deleteToken(token).then(() => {
+                    console.log('Old FCM token deleted successfully.');
+                }).catch((err) => {
+                    console.log('Error deleting old FCM token:', err);
+                });
+            }
         } else {
             console.log('Unable to get permission to notify.');
         }
     });
-    // Function to delete the old FCM token if it exists and is valid
-    function deleteOldTokenIfValid(token) {
-        // Make a request to Firebase to delete the token
-        // Use the deleteToken method provided by the Firebase Messaging SDK
-        messaging.deleteToken(token).then(() => {
-            console.log('Old FCM token deleted successfully.');
-        }).catch((err) => {
-            console.log('Error deleting old FCM token:', err);
-        });
-    }
+
 
 </script>
 <!--<script src="https://www.gstatic.com/firebasejs/10.10.0/firebase-app.js"></script>-->
