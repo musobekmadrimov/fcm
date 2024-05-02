@@ -34,7 +34,7 @@ messaging.onBackgroundMessage(messaging, (payload) => {
         if (!event.action) {
             // Was a normal notification click
             console.log('Notification Click.');
-            self.clients.openWindow(event.notification.data.click_action).then(r => console.log(r));
+            self.clients.openWindow(event.notification.data.click_action);
             event.notification.close();
 
         }else{
