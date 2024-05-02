@@ -30,7 +30,22 @@
         onMessage,
         getToken,
         isSupported,
+        onBackgroundMessage
     } from "https://www.gstatic.com/firebasejs/10.10.0/firebase-messaging.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyBBed8r91sLX41rtN_eV0_oboi6NyrDSAA",
+        authDomain: "portfolio-website-javohir.firebaseapp.com",
+        projectId: "portfolio-website-javohir",
+        storageBucket: "portfolio-website-javohir.appspot.com",
+        messagingSenderId: "762678608362",
+        appId: "1:762678608362:web:348b7f4d324af6130b3293",
+        measurementId: "G-DZK0FFKFBT",
+    }
+
+    const firebaseApp = initializeApp(firebaseConfig);
+
+
     Notification.requestPermission().then((permission) => {
         if (permission === 'granted') {
             console.log('Notification permission granted.');
